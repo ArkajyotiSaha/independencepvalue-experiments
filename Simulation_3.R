@@ -1,6 +1,7 @@
-Coeffmatrix<-expand.grid(p = c(100), ratio = c(1.1, 1.5, 2), starting = seq(1, 1000000, by = 10000 ))
 library(independencepvalue)
 library(clusterGeneration)
+library(MASS)
+Coeffmatrix<-expand.grid(p = c(100), ratio = c(1.1, 1.5, 2), starting = seq(1, 1000000, by = 10000 ))
 indica <- as.numeric(Sys.getenv('SGE_TASK_ID'))
 
 p = Coeffmatrix$p[indica]
@@ -41,7 +42,7 @@ effect_size <- function(Sigma, CP, k){
 
 eval_total <- function(i0, p, n) {
   set.seed(i0)
-  Sigma_cov <- genPositiveDefMat(p)$Sigma + matrix(runif(1), p, p)
+  Sigma_cov <- clusterGeneration::genPositiveDefMat(p)$Sigma + matrix(runif(1), p, p)
   Sigma_cor <- Sigma_cov
   for(i in 1:p){
     for(j in 1:p){
@@ -60,15 +61,15 @@ eval_total <- function(i0, p, n) {
   c0 <- min(c0, 0.99999999)
   
   set.seed(i0)
-  X <- mvrnorm(n = n, rep(0, p), Sigma)
-  block_diag_structure <- block_diag(cor(X), c= c0)
+  X <- MASS::mvrnorm(n = n, rep(0, p), Sigma)
+  block_diag_structure <- independencepvalue::block_diag(cor(X), c= c0)
   if(length(unique(block_diag_structure))> 1){
     set.seed(i0)
     k1 <- sample(unique(block_diag_structure), 1)
     set.seed(i0)
-    t1 <- selective_p_val(S=cov(X), n=n, CP=block_diag_structure, c=c0, k=k1, d0=5, mc_iter=1000)
+    t1 <- independencepvalue::selective_p_val(S=cov(X), n=n, CP=block_diag_structure, c=c0, k=k1, d0=5, mc_iter=1000)
     set.seed(i0)
-    t2 <- classical_p_val(S=cov(X), n=n, CP=block_diag_structure, k=k1, mc_iter=1000)
+    t2 <- independencepvalue::classical_p_val(S=cov(X), n=n, CP=block_diag_structure, k=k1, mc_iter=1000)
     t3 <- effect_size(Sigma, CP=block_diag_structure, k=k1)
     p1 <- sum(block_diag_structure==k1)
     if(2*p1 < p){p1 <- p - sum(block_diag_structure==k1)}
