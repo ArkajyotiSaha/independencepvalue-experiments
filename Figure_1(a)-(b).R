@@ -1,4 +1,3 @@
-rm(list = ls())
 library(Matrix)
 library(MASS)
 library(independencepvalue)
