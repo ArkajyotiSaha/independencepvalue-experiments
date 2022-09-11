@@ -1,3 +1,6 @@
+library(ggplot2)
+library(ggpubr)
+
 unpack_zip_res_new <- function(files){
   mat_Res <- matrix(0, 0, 4)
   for(j in 1:length(files)){
@@ -6,8 +9,7 @@ unpack_zip_res_new <- function(files){
   }
   return(mat_Res)
 }
-library(ggplot2)
-library(ggpubr)
+
 Coeffmatrix_part<-expand.grid(part <- seq(0.1, 1, 0.1), ratio = c(1.1, 1.5, 2))
 Coeffmatrix_part<- cbind(Coeffmatrix_part, rep(0, nrow(Coeffmatrix_part)))
 Coeffmatrix_part<- cbind(Coeffmatrix_part, rep(0, nrow(Coeffmatrix_part)))
@@ -41,7 +43,7 @@ Coeffmatrix_part_melt$n <- paste0("n = ", Coeffmatrix_part_melt$n, "p")
 Coeffmatrix_part_melt$n <- as.factor(Coeffmatrix_part_melt$n)
 
 
-p1 <- ggplot(Coeffmatrix_part_melt, aes(x=part, y=Power, color=n, linetype = Inference)) + geom_point()+ geom_line() + 
+p1 <- ggplot2::ggplot(Coeffmatrix_part_melt, aes(x=part, y=Power, color=n, linetype = Inference)) + geom_point()+ geom_line() + 
   xlab("Effect Size (\u0394)") + ylab("Power at level \u03b1 = 0.05") + labs(color='') + 
   ggtitle(expression(paste("(a) ",r,"(",  hat(P),")" ,' \u2264 5'))) + theme(text = element_text(size = 20)) + 
   theme(plot.title = element_text(hjust = 0.5))  + ylim(0, 0.9)
@@ -81,7 +83,7 @@ Coeffmatrix_part_melt$Inference <- rep(c("Selective", "Classical"), each = nrow(
 Coeffmatrix_part_melt$n <- paste0("n = ", Coeffmatrix_part_melt$n, "p")
 Coeffmatrix_part_melt$n <- as.factor(Coeffmatrix_part_melt$n)
 
-p2 <- ggplot(Coeffmatrix_part_melt, aes(x=part, y=Power, color=n, linetype = Inference)) + geom_point()+ geom_line() + 
+p2 <- ggplot2::ggplot(Coeffmatrix_part_melt, aes(x=part, y=Power, color=n, linetype = Inference)) + geom_point()+ geom_line() + 
   xlab("Effect Size (\u0394)") + ylab("Power at level \u03b1 = 0.05") + labs(color='') + 
   ggtitle(expression(paste("(b) ",r,"(",  hat(P),")" ,' > 5'))) + theme(text = element_text(size = 20)) + 
   theme(plot.title = element_text(hjust = 0.5)) + ylim(0, 0.9)
@@ -89,5 +91,5 @@ p2 <- ggplot(Coeffmatrix_part_melt, aes(x=part, y=Power, color=n, linetype = Inf
 
 png(file="Figures/Figure3.png",
     width=1200, height=800)
-ggarrange(p1, p2, ncol=2, common.legend = TRUE, legend="bottom")
+ggpubr::ggarrange(p1, p2, ncol=2, common.legend=TRUE, legend="bottom")
 dev.off()

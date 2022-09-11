@@ -1,3 +1,6 @@
+library(ggplot2)
+library(ggpubr)
+
 unpack_zip_null <- function(files){
   mat_Res <- matrix(0, 0, 3)
   for(j in 1:length(files)){
@@ -66,11 +69,11 @@ total_mat <- as.data.frame(total_mat)
 
 total_mat$Method <-  Method_names
 
-p2 <- ggplot(total_mat, aes(x=V2, y=V1, color=Method)) + geom_point()+ geom_line() + geom_abline(intercept = 0, slope = 1, color="black") + xlab("Theoretical quantiles") + ylab("Empirical quantiles") + ggtitle(paste0("(b) Selective Inference")) + theme(text = element_text(size = 20)) + theme(plot.title = element_text(hjust = 0.5)) + labs(color='')
+p2 <- ggplot2::ggplot(total_mat, aes(x=V2, y=V1, color=Method)) + geom_point()+ geom_line() + geom_abline(intercept = 0, slope = 1, color="black") + xlab("Theoretical quantiles") + ylab("Empirical quantiles") + ggtitle(paste0("(b) Selective Inference")) + theme(text = element_text(size = 20)) + theme(plot.title = element_text(hjust = 0.5)) + labs(color='')
 
 
 png(file="Figures/Figure2.png",
     width=1200, height=800)
-ggarrange(p1, p2, ncol=2, common.legend = TRUE, legend="bottom")
+ggpubr::ggarrange(p1, p2, ncol=2, common.legend=TRUE, legend="bottom")
 dev.off()
 
