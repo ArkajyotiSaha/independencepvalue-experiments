@@ -11,7 +11,7 @@ Simulation codes and results are stored in the folders Simulation_codes and Simu
 We use the data from [DREAM5 network inference challenge](https://www.synapse.org/#!Synapse:syn2787209/wiki/70354). For user convenience we provide the relevant data in the subfolder DREAM5_data, under Real_data_codes. The subsubfolders DREAM5_data/Training and DREAM5_data/gold_standard_edges_only contain data pertaining to our article, and are downloaded from [training data](https://www.synapse.org/#!Synapse:syn2787212) and [Evaluation scripts](https://www.synapse.org/#!Synapse:syn2787219), respectively.
 Running Real_data_analysis.R in Real_data_codes produces the gene expression data analysis results, that are stored in folder Real_data_results. 
 
-#Figures
+# Figures
 1. Figure 1(a)-(b): Figure_1(a)-(b).R produces this plot.
 2. Figure 1(c): Running Simulation_1(c).R produces the simulation results. Figure_1(c).R produces Figure 1(c).
 3. Figure 2: Running Simulation_2.R produces the simulation results. Figure_2.R produces Figure 2.
