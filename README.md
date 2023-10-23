@@ -12,7 +12,7 @@ We use the data from [DREAM5 network inference challenge](https://www.synapse.or
 Running Real_data_analysis.R in Real_data_codes produces the gene expression data analysis results, that are stored in folder Real_data_results. 
 
 # Figures
-Figure codes and figures are stored in the folders Figures_codes and Figures respectively.
+Figure codes and figures are stored in the folders Figures_codes and Figures, respectively.
 
 1. Figure 1(a)-(b): Figure_1(a)-(b).R produces this plot.
 2. Figure 1(c): Running Simulation_1(c).R produces the simulation results. Figure_1(c).R produces Figure 1(c).
