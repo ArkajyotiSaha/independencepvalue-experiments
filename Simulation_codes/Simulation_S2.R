@@ -4,7 +4,7 @@ library(independencepvalue)
 
 eval_total <- function(i0, p, n, c0, nu) {
   set.seed(i0)
-  X <- matrix(mvtnorm::rmvt(n*p, df=nu, sigma = 1), n, p)
+  X <- matrix(mvtnorm::rmvt(n*p, df=nu)[,1], n, p)
   block_diag_structure <- independencepvalue::block_diag(cor(X), c=c0)
   if(length(unique(block_diag_structure))> 1){
     set.seed(i0)
