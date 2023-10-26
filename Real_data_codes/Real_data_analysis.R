@@ -56,8 +56,8 @@ eval_total <- function(i0, dip, add_mat, p, n, eta) {
 }
 p <- 100
 for(network in c(3:4)){
-  fip <- data.table::fread(paste0("Real_data_results/DREAM5_data/gold_standard_edges_only/DREAM5_NetworkInference_Edges_Network", network, ".tsv"))
-  dip <- data.table::fread(paste0("Real_data_results/DREAM5_data/Training/net", network, "_expression_data.tsv"))
+  fip <- data.table::fread(paste0("Real_data_codes/DREAM5_data/gold_standard_edges_only/DREAM5_NetworkInference_Edges_Network", network, ".tsv"))
+  dip <- data.table::fread(paste0("Real_data_codes/DREAM5_data/Training/net", network, "_expression_data.tsv"))
   add_mat <- matrix(0, ncol(dip), ncol(dip))
   fip1 <- as.numeric(gsub(".*?([0-9]+).*", "\\1", fip[, 1]$V1))
   fip2 <- as.numeric(gsub(".*?([0-9]+).*", "\\1", fip[, 2]$V2))
