@@ -12,7 +12,9 @@ c0 <- 0.5
 
 Sigma <- create_example(p = p, a = 0.6, b = 0.3)
 
-
+#Code for simulation with a given a population covariance matrix and a given threshold. 
+#input: i0 = Seed, p = # of variables, n = # of samples, c0 = threshold, Sigma = population covariance matrix. 
+#output: A vector of seletive and classical p-values.
 eval_total <- function(i0, p, n, c0, Sigma) {
   set.seed(i0)
   X <- MASS::mvrnorm(n = n, rep(0, p), Sigma)
