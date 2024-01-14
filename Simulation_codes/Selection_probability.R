@@ -6,6 +6,10 @@ library(independencepvalue)
 library(SimplicialCubature)
 library(future.apply)
 
+# Compute the probability of the selection event using numerical integration. 
+# This is the denominator of the ratio computed in independencepvalue:::selective_p_val_integrate().
+# Reuse the code from independencepvalue:::selective_p_val_integrate().
+# Please refer to the documentation of independencepvalue:::selective_p_val_integrate() for details.
 selection_integrate <- function(n, L, g, test_hyp, tol = 1e-05, maxeval = 1e4) {
   p1 <- nrow(test_hyp$S11)
   p2 <- nrow(test_hyp$S22)
@@ -31,9 +35,7 @@ selection_integrate <- function(n, L, g, test_hyp, tol = 1e-05, maxeval = 1e4) {
       }
       return(SimplicialCubature::adaptIntegrateSimplex(f_tot, t(Pi@V[triang[i, ],]), fDim = 2, tol = tol, maxEvals = maxeval)$integral) # perform numerical integration on the simplices
     }
-    par_I_tot_list <-
-      future.apply::future_sapply(1:nrow(triang), part_int, Pi, triang, f_tot, future.seed =
-                                    TRUE)
+    par_I_tot_list <- future.apply::future_sapply(1:nrow(triang), part_int, Pi, triang, f_tot, future.seed = TRUE)
     du <- sum(par_I_tot_list[1, ])   
     if (sum(par_I_tot_list[1, ]) == 0) { # if the integral in the denominator is effectively zero, set du to 0.
       du <- 0
@@ -42,22 +44,28 @@ selection_integrate <- function(n, L, g, test_hyp, tol = 1e-05, maxeval = 1e4) {
   return(du)
 }
 
+# Compute the probability of the selection event directly from Beta distribution. 
+# This is the denominator of the ratio computed in independencepvalue:::selective_p_val_beta().
+# Reuse the code from independencepvalue:::selective_p_val_beta().
+# Please refer to the documentation of independencepvalue:::selective_p_val_beta() for details.
 selection_beta <- function(S, CP, k, n, c, test_hyp) {
   p <- nrow(S)
   diag_S <- diag(1 / sqrt(diag(S)))
   R <- diag_S %*% S %*% diag_S
-  g_u <-
-    min(1, c ^ 2 * (1 - test_hyp$statistic) / max(abs(R[CP == k, CP != k])) ^ 2)
+  g_u <- min(1, c ^ 2 * (1 - test_hyp$statistic) / max(abs(R[CP == k, CP != k])) ^ 2)
   I_denom_tot <- stats::pbeta(c(0, g_u), (p - 1) / 2, (n - p) / 2)
   return((I_denom_tot[2] - I_denom_tot[1]))
 }
 
+# Compute the probability of the selection event using Monte Carlo. 
+# This is the denominator of the ratio computed in independencepvalue:::selective_p_val_MC().
+# Reuse the code from independencepvalue:::selective_p_val_MC().
+# Please refer to the documentation of independencepvalue:::selective_p_val_MC() for details.
 selection_MC <- function(n, L, g, test_hyp, mc_iter) {
   p1 <- nrow(test_hyp$S11)
   p2 <- nrow(test_hyp$S22)
   p <- p1 + p2
-  sip <-
-    future.apply::future_sapply(1:mc_iter, function(i)
+  sip <- future.apply::future_sapply(1:mc_iter, function(i)
       independencepvalue:::MC_function_selective(p, p2, n, L, g), future.seed = TRUE)
   zp <- sum(as.numeric(sip[2, ]))
   if (zp < 100) {
@@ -67,7 +75,7 @@ selection_MC <- function(n, L, g, test_hyp, mc_iter) {
   return( mean(sip[2, ] == TRUE))
 }
 
-
+# Compute the probability of the selection event in the selective p value
 selection <- function(S, CP, k, n, c, d0 = 5, tol = 1e-05, maxeval = 1e5, mc_iter = 1000){
   test_hyp <- independencepvalue:::test_stat_CCA(S, CP, k)
   p1 <- nrow(test_hyp$S11)
