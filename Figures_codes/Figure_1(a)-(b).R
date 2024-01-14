@@ -17,11 +17,11 @@ Sigma <- create_example(p = p, a = 0.6, b = 0.3)
 #output: A vector of seletive and classical p-values.
 eval_total <- function(i0, p, n, c0, Sigma) {
   set.seed(i0)
-  X <- MASS::mvrnorm(n = n, rep(0, p), Sigma)
-  block_diag_structure <- independencepvalue::block_diag(cor(X), c = c0)
+  X <- MASS::mvrnorm(n = n, rep(0, p), Sigma)#simulate from the specified population covariance matrix
+  block_diag_structure <- independencepvalue::block_diag(cor(X), c = c0)#threshold to obtain the groups
   if(length(unique(block_diag_structure)) > 1){
     set.seed(i0)
-    k1 <- sample(unique(block_diag_structure), 1)
+    k1 <- sample(unique(block_diag_structure), 1)#randomly choose a group for testing independence with the remaining variables
     set.seed(i0)
     t1 <- independencepvalue::selective_p_val(S = cov(X), n = n, CP = block_diag_structure, c = c0, k = k1, d0 = 5, mc_iter = 1000, maxeval = 10000)
     set.seed(i0)
